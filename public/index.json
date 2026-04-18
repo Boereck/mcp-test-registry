@@ -1,0 +1,53 @@
+[
+  {
+    "server":
+    {
+      "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+      "name": "io.github.boereck/profile-loader-mcp",
+      "title": "DEMIS Profile Loader MCP Server",
+      "description": "Exposes FHIR profile-loader projects as MCP resources and provides tools to create, build, and validate them.",
+      "version": "11.3.0",
+      "repository": {
+        "url": "https://github.com/robert-koch-institut/demis-profile-loader",
+        "source": "github"
+      },
+      "packages": [
+        {
+          "registryType": "oci",
+          "identifier": "dockerhub.fokus.fraunhofer.de:5000/demis-light/demis-profile-loader/mcp:11.3.0-SNAPSHOT",
+          "runtimeHint": "docker",
+          "runtimeArguments": [
+            {
+              "type": "named",
+              "name": "--rm"
+            },
+            {
+              "type": "named",
+              "name": "-v",
+              "value": "~/.fhir:/home/profileloader/.fhir"
+            },
+            {
+              "type": "named",
+              "name": "-v",
+              "value": "~/.profileloader:/home/profileloader/.profileloader"
+            }
+          ],
+          "packageArguments": [
+            {
+              "type": "positional",
+              "valueHint": "project_path",
+              "description": "Absolute path to the profile-loader project directory to expose.",
+              "isRequired": true,
+              "isRepeated": true,
+              "format": "filepath"
+            }
+          ],
+          "transport": {
+            "type": "stdio"
+          }
+        }
+      ]
+    }
+  
+  }
+]

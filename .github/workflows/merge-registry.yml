@@ -1,0 +1,30 @@
+name: Merge MCP Registry
+
+on:
+  schedule:
+    - cron: '0 * * * *'   # stündlich
+  workflow_dispatch:        # manuell auslösbar
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Merge upstream + custom entries
+        run: node scripts/merge.js > docs/index.json
+
+      - name: Commit & push (nur bei Änderungen)
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/index.json
+          git diff --cached --quiet || git commit -m "chore: update registry [skip ci]"
+          git push
