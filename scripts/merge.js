@@ -7,7 +7,16 @@ async function fetchAll() {
   const limit = 100;
 
   while (true) {
-    const res = await fetch(`${UPSTREAM}?limit=${limit}&offset=${offset}`);
+    const res = await fetch(`${UPSTREAM}?limit=${limit}&offset=${offset}`, {
+      headers: {
+        "Accept": "application/json",
+        "User-Agent": "mcp-registry-merger/1.0 (github-actions)"
+      }
+    });
+
+    if (!res.ok) {
+      throw new Error(`Upstream returned ${res.status}: ${await res.text()}`);
+    }
     const data = await res.json();
     if (!data.servers?.length) break;
     servers.push(...data.servers);
